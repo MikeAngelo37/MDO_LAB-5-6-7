@@ -1,0 +1,6 @@
+FROM irssiBuild
+# FROM ubuntu
+
+# WORKDIR build
+
+# RUN meson test
