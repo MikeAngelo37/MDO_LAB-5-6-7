@@ -5,7 +5,7 @@ pipeline {
     }
     agent any
     stages {
-        stage('Clone') {
+        stage('Prepare') {
             steps {
                 sh 'DOCKER_TLS_VERIFY=0 docker rm -f buffer'
                 sh 'docker volume prune -f'
