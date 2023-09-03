@@ -21,10 +21,10 @@ pipeline {
             steps {
 	      checkout([$class: 'GitSCM', 
               branches: [[name: '*/main']], 
-              userRemoteConfigs: [[url: 'https://github.com/KKorzec/MDOL6']]])
+              userRemoteConfigs: [[url: 'https://github.com/MikeAngelo37/MDO_LAB-5-6-7']]])
 	      	sh 'rm -f /var/jenkins_home/workspace/MDOL6/log-*.txt'
        		sh 'docker system prune -f'
-	      	git 'https://github.com/KKorzec/irssiMDO'
+	      	git 'https://github.com/MikeAngelo37/irssi'
         	sh 'docker build -t irssibld . -f DockerfileBuild'
         	sh 'docker volume create volout'
         	sh 'docker run --mount type=volume,src="volin",dst=/app --mount type=volume,src="volout",dst=/app/result irssibld bash -c "ls -l && cd irssi && 		meson setup build && ninja -C build; cp -r ../irssi ../result" > log-build.txt'
