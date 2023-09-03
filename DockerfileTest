@@ -1,4 +1,4 @@
-FROM irssiBuild
+FROM irssibld
 # FROM ubuntu
 
 # WORKDIR build
