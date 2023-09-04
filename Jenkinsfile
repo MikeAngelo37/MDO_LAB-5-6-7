@@ -59,7 +59,7 @@ pipeline {
                 echo 'Deploying...'
 		sh 'docker rm -f deploybuffer || true'
     		sh 'docker run -dit --name deploybuffer --mount type=volume,src="volout",dst=/app/result ubuntu > log-deploy.txt'
-    		/*sh 'docker container exec deploybuffer sh -c "apt-get update" >> log-deploy.txt'*/
+    		sh 'docker container exec deploybuffer sh -c "apt-get update" >> log-deploy.txt'
 		sh 'docker container exec deploybuffer sh -c "DEBIAN_FRONTEND="noninteractive" apt-get install -y libglib2.0" >> log-deploy.txt'
 		sh "docker container exec deploybuffer sh -c 'apt-get install -y libutf8proc-dev' >> log-deploy.txt"
 		sh "docker container exec deploybuffer sh -c 'cd /app/result/irssi/build/src/fe-text && ./irssi -v' >> log-deploy.txt"
