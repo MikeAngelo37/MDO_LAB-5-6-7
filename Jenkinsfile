@@ -81,19 +81,19 @@ pipeline {
                 sh "docker commit app app_fin"
                 sh "docker save app_fin > redis.tar"
                 archiveArtifacts artifacts: 'redis.tar', onlyIfSuccessful: true
-            }
-
-            post {
-                always{
-                    archiveArtifacts(artifacts: 'logs_*.txt', fingerprint: true, followSymlinks: false)
-                }
-                success {
-                    echo 'Success!'
-                }
-                failure {
-                    echo 'Failed in Test!'
-                }
-            }
+	        }
+	
+	        post {
+	            always{
+	                archiveArtifacts(artifacts: 'logs_*.txt', fingerprint: true, followSymlinks: false)
+	            }
+		    success {
+	                echo 'Success!'
+	            }
+	            failure {
+	                echo 'Failed in Test!'
+	            }
+	        }
 		
 		/*echo 'Publishing...'
 		sh 'docker tag irssi mikeangelo37/irrsi:latest'
@@ -113,8 +113,8 @@ pipeline {
 		archiveArtifacts artifacts: "log-test.txt"
 		archiveArtifacts artifacts: "log-deploy.txt"
 		archiveArtifacts artifacts: "log-publish.txt"
-		sh 'docker rm -f publishbuffer'
-            }*/
+		sh 'docker rm -f publishbuffer'*/
+            }
             
         }
     }
