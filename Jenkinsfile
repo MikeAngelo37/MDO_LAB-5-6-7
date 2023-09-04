@@ -29,6 +29,7 @@ pipeline {
         	sh 'docker volume create volout'
         	sh 'docker run --mount type=volume,src="volin",dst=/app --mount type=volume,src="volout",dst=/app/result irssibld bash -c "ls -l && cd irssi && 		meson setup build && ninja -C build; cp -r ../irssi ../result" > log-build.txt'
         	echo 'Building...'
+		archiveArtifacts artifacts: "log-build.txt"
                
             }
             post {
@@ -44,6 +45,7 @@ pipeline {
             steps {
                 sh 'docker build -t irssitst . -f DockerfileTest'
                 sh 'docker run -t --mount type=volume,src="volin",dst=/app irssitst bash -c "cd irssi/build && meson test" > log-test.txt'
+		archiveArtifacts artifacts: "log-test.txt"
             }
              post {
                 failure {
@@ -65,6 +67,7 @@ pipeline {
 		sh "docker container exec deploybuffer sh -c 'cd /app/result/irssi/build/src/fe-text && ./irssi -v' >> log-deploy.txt"
 		sh "docker container kill deploybuffer"
 		sh 'docker rm -f deploybuffer'
+		archiveArtifacts artifacts: "log-deploy.txt"
             }
             
         }
@@ -73,7 +76,30 @@ pipeline {
                 expression {return params.PROMOTE}
             }
             steps {
-                echo 'Publishing...'
+		steps {
+                echo 'Publishing'
+                sh "docker commit app app_fin"
+                sh "docker save app_fin > redis.tar"
+                archiveArtifacts artifacts: 'redis.tar', onlyIfSuccessful: true
+            }
+
+            post {
+                always{
+                    archiveArtifacts(artifacts: 'logs_*.txt', fingerprint: true, followSymlinks: false)
+                }
+                success {
+                    echo 'Success!'
+                }
+                failure {
+                    echo 'Failed in Test!'
+                }
+            }
+		
+		/*echo 'Publishing...'
+		sh 'docker tag irssi mikeangelo37/irrsi:latest'
+		sh 'docker push mikeangelo37/irrsi:latest'
+		archiveArtifacts artifacts: "log-publish.txt"
+                /*echo 'Publishing...'
 		sh 'docker rm -f publishbuffer || true'
     		sh 'find /var/jenkins_home/workspace -name "artifacts" || mkdir /var/jenkins_home/workspace/artifacts'
     		sh 'docker run -d --rm --name publishbuffer --mount type=volume,src="volout",dst=/app/result --mount type=bind,source=/var/jenkins_home/workspace/artifacts,target=/usr/local/copy ubuntu  bash -c "chmod -R 777 /app && cp -r /app/. /usr/local/copy" > log-publish.txt'
@@ -88,7 +114,7 @@ pipeline {
 		archiveArtifacts artifacts: "log-deploy.txt"
 		archiveArtifacts artifacts: "log-publish.txt"
 		sh 'docker rm -f publishbuffer'
-            }
+            }*/
             
         }
     }
