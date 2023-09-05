@@ -83,6 +83,7 @@ pipeline {
         }
     }
 }
+/* fd264a96-f98f-4122-bb6f-a19b3ad27e58 */
 
 		/*echo 'Publishing...'
 		sh 'docker tag irssi mikeangelo37/irrsi:latest'
