@@ -76,25 +76,14 @@ pipeline {
                 expression {return params.PROMOTE}
             }
             steps {
-		steps {
-                echo 'Publishing'
-                sh "docker commit app app_fin"
-                sh "docker save app_fin > redis.tar"
-                archiveArtifacts artifacts: 'redis.tar', onlyIfSuccessful: true
-	        }
-	
-	        post {
-	            always{
-	                archiveArtifacts(artifacts: 'logs_*.txt', fingerprint: true, followSymlinks: false)
-	            }
-		    success {
-	                echo 'Success!'
-	            }
-	            failure {
-	                echo 'Failed in Test!'
-	            }
-	        }
+		echo 'Publishing...'
 		
+		archiveArtifacts artifacts: "log-publish.txt"
+            }
+        }
+    }
+}
+
 		/*echo 'Publishing...'
 		sh 'docker tag irssi mikeangelo37/irrsi:latest'
 		sh 'docker push mikeangelo37/irrsi:latest'
@@ -114,8 +103,3 @@ pipeline {
 		archiveArtifacts artifacts: "log-deploy.txt"
 		archiveArtifacts artifacts: "log-publish.txt"
 		sh 'docker rm -f publishbuffer'*/
-            }
-            
-        }
-    }
-}
