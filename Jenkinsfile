@@ -1,8 +1,8 @@
 pipeline {
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('nazwa_twojego_sekretu_dockerhub')
-        DOCKER_IMAGE_NAME = 'nazwa_obrazu'
-        DOCKER_IMAGE_TAG = 'tag_obrazu'
+        DOCKERHUB_CREDENTIALS = credentials('fd264a96-f98f-4122-bb6f-a19b3ad27e58')
+        DOCKER_IMAGE_NAME = 'irssi'
+        DOCKER_IMAGE_TAG = 'latest'
     }
     parameters {
         string(name: 'VERSION', defaultValue: '0.0.0', description: '')
