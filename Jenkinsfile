@@ -1,8 +1,6 @@
 pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('fd264a96-f98f-4122-bb6f-a19b3ad27e58')
-        DOCKER_IMAGE_NAME = 'irssi'
-        DOCKER_IMAGE_TAG = 'latest'
     }
     parameters {
         string(name: 'VERSION', defaultValue: '0.0.0', description: '')
@@ -82,12 +80,8 @@ pipeline {
             }
             steps {
 		echo 'Publishing...'
-		script {
-                    docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}")
-                    dockerImage.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                        dockerImage.push()
-                    }
-                }
+		sh 'docker tag irrsi mikeangelo37/irssi:latest'
+		sh 'docker push mikeangelo37/irssi:latest'
 		archiveArtifacts artifacts: "log-publish.txt"
             }
         }
