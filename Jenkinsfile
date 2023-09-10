@@ -1,6 +1,8 @@
 pipeline {
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('fd264a96-f98f-4122-bb6f-a19b3ad27e58')
+        /*DOCKERHUB_CREDENTIALS = credentials('fd264a96-f98f-4122-bb6f-a19b3ad27e58')*/
+	registry = "mikeangelo37/irssi"
+	registryCredential = 'fd264a96-f98f-4122-bb6f-a19b3ad27e58'
     }
     parameters {
         string(name: 'VERSION', defaultValue: '0.0.0', description: '')
@@ -80,9 +82,15 @@ pipeline {
             }
             steps {
 		echo 'Publishing...'
-		sh 'docker login'
+		script {
+		    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+		    docker.withRegistry( '', registryCredential ) {
+			dockerImage.push()
+		    }
+		}
+		/*sh 'docker login'
 		sh 'docker tag irssibld mikeangelo37/irssi:latest'
-		sh 'docker push mikeangelo37/irssi:latest'
+		sh 'docker push mikeangelo37/irssi:latest'*/
 		archiveArtifacts artifacts: "log-publish.txt"
             }
         }
