@@ -80,7 +80,7 @@ pipeline {
             }
             steps {
 		echo 'Publishing...'
-		sh 'docker tag irssi mikeangelo37/irssi:latest'
+		sh 'docker tag irssibld mikeangelo37/irssi:latest'
 		sh 'docker push mikeangelo37/irssi:latest'
 		archiveArtifacts artifacts: "log-publish.txt"
             }
