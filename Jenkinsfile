@@ -1,4 +1,9 @@
 pipeline {
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('nazwa_twojego_sekretu_dockerhub')
+        DOCKER_IMAGE_NAME = 'nazwa_obrazu'
+        DOCKER_IMAGE_TAG = 'tag_obrazu'
+    }
     parameters {
         string(name: 'VERSION', defaultValue: '0.0.0', description: '')
         booleanParam(name: 'PROMOTE', defaultValue: true, description: '')
@@ -77,7 +82,12 @@ pipeline {
             }
             steps {
 		echo 'Publishing...'
-		
+		script {
+                    docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}")
+                    dockerImage.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
+                        dockerImage.push()
+                    }
+                }
 		archiveArtifacts artifacts: "log-publish.txt"
             }
         }
